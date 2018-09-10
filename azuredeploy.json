@@ -25,26 +25,6 @@
             "defaultValue": "",
             "type": "String"
         },
-        "ports": {
-            "defaultValue": "{\"port\":  25, \"protocol\": \"TCP\"}",
-            "type": "String"
-        },
-        "ports2": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "ports3": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "hasPort2": {
-            "type": "bool",
-            "defaultValue": false
-        },
-        "hasPort3": {
-            "type": "bool",
-            "defaultValue": false
-        },
         "commands": {
             "defaultValue": "none",
             "type": "String"
@@ -90,8 +70,7 @@
         "numberCores": "[int(parameters('numberCores'))]",
         "memory": "[float(parameters('memory'))]",
         "dnsLabel": "[parameters('dnsLabel')]",
-        "port": "[parameters('ports')]",
-        "ports": "[if(and(parameters('hasPort2'), parameters('hasPort3')), createArray(json(parameters('ports')), json(parameters('ports2')), json(parameters('ports3'))), if(parameters('hasPort2'), createArray(json(parameters('ports')), json(parameters('ports2'))), if(parameters('hasPort3'), createArray(json(parameters('ports')), json(parameters('ports3'))), createArray(json(parameters('ports'))))))]",
+        "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
         "commands": "[if(equals(parameters('commands'), 'none'), take(createArray(''), 0), split(parameters('commands'), ', '))]",
         "environmentVariable": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable'), ':'), 2)), '}'))]",
         "environmentVariable2": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable2'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable2'), ':'), 2)), '}'))]",
