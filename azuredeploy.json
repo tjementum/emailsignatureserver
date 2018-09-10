@@ -13,26 +13,6 @@
             "type": "String",
             "defaultValue": "templafyshared.azurecr.io/email-signature-server:latest"
         },
-        "imageRegistryLoginServer": {
-            "type": "String",
-            "defaultValue": "templafyshared.azurecr.io"
-        },
-        "imageUsername": {
-            "type": "String",
-            "defaultValue": "templafyshared"
-        },
-        "imagePassword": {
-            "type": "secureString",
-            "defaultValue": "xo7XHXMwjwcSb84CQX6lePKxCzkq10y+"
-        },
-        "osType": {
-            "allowedValues": [
-                "Linux",
-                "Windows"
-            ],
-            "type": "String",
-            "defaultValue":"Linux"
-        },
         "numberCores": {
             "type": "String",
             "defaultValue": "1"
@@ -117,10 +97,10 @@
         "_publicIPOnly": "[equals(parameters('containerType'),'privateImage-publicIP')]",
         "_bothPrivate": "[equals(parameters('containerType'),'privateImage-privateIP')]",
         "containerURI": "[parameters('containerURI')]",
-        "imageRegistryLoginServer": "[parameters('imageRegistryLoginServer')]",
-        "imageUsername": "[parameters('imageUsername')]",
-        "imagePassword": "[parameters('imagePassword')]",
-        "osType": "[parameters('osType')]",
+        "imageRegistryLoginServer": "templafyshared.azurecr.io",
+        "imageUsername": "templafyshared",
+        "imagePassword": "xo7XHXMwjwcSb84CQX6lePKxCzkq10y+",
+        "osType": "Linux",
         "numberCores": "[int(parameters('numberCores'))]",
         "memory": "[float(parameters('memory'))]",
         "dnsLabel": "[parameters('dnsLabel')]",
