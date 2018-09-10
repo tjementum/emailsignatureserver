@@ -9,26 +9,28 @@
             "type": "String"
         },
         "containerURI": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "templafyshared.azurecr.io/email-signature-server:latest"
         },
         "imageRegistryLoginServer": {
             "type": "String",
-            "defaultValue": ""
+            "defaultValue": "templafyshared.azurecr.io"
         },
         "imageUsername": {
             "type": "String",
-            "defaultValue": ""
+            "defaultValue": "templafyshared"
         },
         "imagePassword": {
             "type": "secureString",
-            "defaultValue": ""
+            "defaultValue": "xo7XHXMwjwcSb84CQX6lePKxCzkq10y+"
         },
         "osType": {
             "allowedValues": [
                 "Linux",
                 "Windows"
             ],
-            "type": "String"
+            "type": "String",
+            "defaultValue":"Linux"
         },
         "numberCores": {
             "type": "String"
@@ -41,7 +43,7 @@
             "type": "String"
         },
         "ports": {
-            "defaultValue": "80",
+            "defaultValue": "25",
             "type": "String"
         },
         "ports2": {
