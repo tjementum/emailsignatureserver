@@ -29,7 +29,7 @@
             "type": "String"
         },
         "office365ApplicationId": {
-            "defaultValue":  "xxxxxxxx-xxxx-xxxx-yyyy-xxxxxxxxxxxx",
+            "defaultValue":  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             "type": "String"
         },
         "environmentVariable": {
@@ -76,7 +76,7 @@
         "dnsLabel": "[parameters('dnsLabel')]",
         "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
         "commands": "[if(equals(parameters('commands'), 'none'), take(createArray(''), 0), split(parameters('commands'), ', '))]",
-        "environmentVariables": "[json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"}'))]",
+        "environmentVariables": "[createArray(json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"}')))]",
         "restartPolicy": "[parameters('restartPolicy')]"
     },
     "resources": [
