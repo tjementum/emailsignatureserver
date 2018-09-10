@@ -3,30 +3,52 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "containerName": {
-            "type": "String"
+            "type": "string"
         },
         "containerVersion": {
             "type": "String",
             "defaultValue": "latest",
-            "metadata": {
-                "description": "The version of the Email Signature Server"
-            }
+            "metadata": {"description": "The version of the Email Signature Server Docker Image. Use 'latest' for the most resent version."}
         },
         "numberCores": {
             "type": "String",
-            "defaultValue": "1"
+            "defaultValue": "1",
+            "metadata": {"description": "Since mails are processed single threaded, more than 1 CPU is probably not going to make more through put"}
         },
         "memory": {
             "type": "String",
-            "defaultValue": "1.5"
+            "defaultValue": "1.5",
+            "metadata": {"description": "RAM in virtual machine. More RAM is more expensive."}
         },
         "dnsLabel": {
             "defaultValue": "",
-            "type": "String"
+            "type": "String",
+            "metadata": {"description": "This is the end-point that must be added to the Office 365 out-bound smart host. The fully qualified domain name (FQDN) will be dnslabel.[azureregion].azurecontainer.io."}
         },
         "office365ApplicationId": {
             "defaultValue":  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-            "type": "String"
+            "type": "String",
+            "metadata": {"description": "The Office 365 Application ID."}
+        },
+        "office365DomainName": {
+            "defaultValue":  "[office365domainname].onmicrosoft.com",
+            "type": "String",
+            "metadata": {"description": "The name used when registring you Office 365 account."}
+        },
+        "azureStorageAccountName": {
+            "defaultValue":  "DefaultEndpointsProtocol=https;AccountName=YOUR_ACCOUNT_NAME;AccountKey=YOUR_ACCOUNT_KEY",
+            "type": "String",
+            "metadata": {"description": "Connection string to your blob-storage account."}
+        },
+        "azureStorageEmailSignaturesContainerName": {
+            "defaultValue":  "templafyemailsignature",
+            "type": "String",
+            "metadata": {"description": "The Blob storage container name. Default templafyemailsignature."}
+        },
+        "secretsDirectory": {
+            "defaultValue":  "/etc/secrets/templafy",
+            "type": "String",
+            "metadata": {"description": "The directory name for Temlafy secrets."}
         }
     },
     "variables": {
