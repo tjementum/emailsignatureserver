@@ -29,7 +29,7 @@
             "type": "String"
         },
         "office365ApplicationId": {
-            "defaultValue":  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "defaultValue":  "xxxxxxxx-xxxx-xxxx-yyyy-xxxxxxxxxxxx",
             "type": "String"
         },
         "environmentVariable": {
@@ -63,6 +63,7 @@
     },
     "variables": {
         "APIversion": "2018-04-01",
+        "doubleQuote": "\"",
         "containerName": "[parameters('containerName')]",
         "location": "[resourceGroup().location]",
         "containerURI": "[parameters('containerURI')]",
@@ -75,20 +76,7 @@
         "dnsLabel": "[parameters('dnsLabel')]",
         "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
         "commands": "[if(equals(parameters('commands'), 'none'), take(createArray(''), 0), split(parameters('commands'), ', '))]",
-        
-        "environmentVariables": "[json(concat('{\"name\": ', \"office365ApplicationId\", ', \"value\": ', '\"', parameters('office365ApplicationId'), '\"', '}'))]",
-        
-        "environmentVariable": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable'), ':'), 2)), '}'))]",
-        "environmentVariable2": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable2'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable2'), ':'), 2)), '}'))]",
-        "environmentVariable3": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable3'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable3'), ':'), 2)), '}'))]",
-        "EVall": "[createArray(variables('environmentVariable'), variables('environmentVariable2'), variables('environmentVariable3'))]",
-        "EV12": "[createArray(variables('environmentVariable'), variables('environmentVariable2'))]",
-        "EV13": "[createArray(variables('environmentVariable'), variables('environmentVariable3'))]",
-        "EV23": "[createArray(variables('environmentVariable2'), variables('environmentVariable3'))]",
-        "EV1": "[createArray(variables('environmentVariable'))]",
-        "EV2": "[createArray(variables('environmentVariable2'))]",
-        "EV3": "[createArray(variables('environmentVariable3'))]",
-        "EV": "[if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable2'), parameters('hasEnvironmentVariable3')), variables('EVall'), if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable2')), variables('EV12'), if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable3')), variables('EV13'), if(and(parameters('hasEnvironmentVariable2'), parameters('hasEnvironmentVariable3')), variables('EV23'), if(parameters('hasEnvironmentVariable'), variables('EV1'), if(parameters('hasEnvironmentVariable2'), variables('EV2'), if(parameters('hasEnvironmentVariable3'), variables('EV3'), take(createArray(''), 0))))))))]",
+        "environmentVariables": "[json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"}'))]",
         "restartPolicy": "[parameters('restartPolicy')]"
     },
     "resources": [
