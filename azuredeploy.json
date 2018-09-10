@@ -35,7 +35,7 @@
             "type": "string",
             "metadata": {"description": "The name used when registring you Office 365 account."}
         },
-        "azureStorageAccountName": {
+        "azureStorageAccount": {
             "defaultValue":  "DefaultEndpointsProtocol=https;AccountName=YOUR_ACCOUNT_NAME;AccountKey=YOUR_ACCOUNT_KEY",
             "type": "string",
             "metadata": {"description": "Connection string to your blob-storage account."}
@@ -54,7 +54,6 @@
     "variables": {
         "APIversion": "2018-04-01",
         "doubleQuote": "\"",
-        "containerName": "[parameters('containerName')]",
         "location": "[resourceGroup().location]",
         "containerURI": "[concat('templafyshared.azurecr.io/email-signature-server:', parameters('containerVersion'))]",
         "imageRegistryLoginServer": "templafyshared.azurecr.io",
@@ -67,15 +66,15 @@
         "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
         "office365ApplicationId": "[json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"', parameters('office365ApplicationId') ,'\"}'))]",
         "office365DomainName": "[json(concat('{\"name\": \"office365DomainName\", \"value\": \"', parameters('office365DomainName') ,'\"}'))]",
-        "azureStorageAccountName": "[json(concat('{\"name\": \"azureStorageAccountName\", \"value\": \"', parameters('azureStorageAccountName') ,'\"}'))]",
+        "azureStorageAccount": "[json(concat('{\"name\": \"azureStorageAccount\", \"value\": \"', parameters('azureStorageAccount') ,'\"}'))]",
         "azureStorageEmailSignaturesContainerName": "[json(concat('{\"name\": \"azureStorageEmailSignaturesContainerName\", \"value\": \"', parameters('azureStorageEmailSignaturesContainerName') ,'\"}'))]",
         "secretsDirectory": "[json(concat('{\"name\": \"secretsDirectory\", \"value\": \"', parameters('secretsDirectory') ,'\"}'))]",
-        "environmentVariables": "[createArray(variables('office365ApplicationId'),variables('office365DomainName'),variables('azureStorageAccountName'),variables('azureStorageEmailSignaturesContainerName'),variables('secretsDirectory'))]",
+        "environmentVariables": "[createArray(variables('office365ApplicationId'),variables('office365DomainName'),variables('azureStorageAccount'),variables('azureStorageEmailSignaturesContainerName'),variables('secretsDirectory'))]",
         "restartPolicy": "always"
     },
     "resources": [
         {
-            "name": "[variables('containerName')]",
+            "name": "templafyemailsignature",
             "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "[variables('APIversion')]",
             "location": "[variables('location')]",
@@ -85,7 +84,6 @@
                         "name": "[variables('containerName')]",
                         "properties": {
                             "image": "[variables('containerURI')]",
-                            "command": "",
                             "environmentVariables": "[variables('environmentVariables')]",
                             "ports": "[variables('ports')]",
                             "resources": {
