@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerName": {
+            "value": "email-signature-server-thomas"
+        },
+        "location": {
+            "value": "northeurope"
+        },
+        "containerURI": {
+            "value": "templafyshared.azurecr.io/email-signature-server:latest"
+        },
+        "imageRegistryLoginServer": {
+            "value": "templafyshared.azurecr.io"
+        },
+        "imageUsername": {
+            "value": "templafyshared"
+        },
+        "imagePassword": {
+            "value": null
+        },
+        "osType": {
+            "value": "Linux"
+        },
+        "numberCores": {
+            "value": "1"
+        },
+        "memory": {
+            "value": "1.5"
+        },
+        "dnsLabel": {
+            "value": "thomas-email-signature-server"
+        },
+        "ports": {
+            "value": "{\"port\":  25, \"protocol\": \"TCP\"}"
+        },
+        "ports2": {
+            "value": "{\"port\":  , \"protocol\": \"TCP\"}"
+        },
+        "ports3": {
+            "value": "{\"port\":  , \"protocol\": \"TCP\"}"
+        },
+        "hasPort2": {
+            "value": false
+        },
+        "hasPort3": {
+            "value": false
+        },
+        "containerType": {
+            "value": "privateImage-publicIP"
+        },
+        "restartPolicy": {
+            "value": "always"
+        },
+        "commands": {
+            "value": "\"azureStorageEmailSignaturesContainerName\":\"\""
+        },
+        "environmentVariable": {
+            "value": "\"office365ApplicationId\":\"7630257c8ca148cf8c44d42380fee3ad\""
+        },
+        "hasEnvironmentVariable": {
+            "value": true
+        },
+        "environmentVariable2": {
+            "value": "\"office365DomainName\":\"\""
+        },
+        "hasEnvironmentVariable2": {
+            "value": true
+        },
+        "environmentVariable3": {
+            "value": "\"azureStorageAccount\":\"\""
+        },
+        "hasEnvironmentVariable3": {
+            "value": true
+        }
+    }
+}
