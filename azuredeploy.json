@@ -45,16 +45,6 @@
             "type": "bool",
             "defaultValue": false
         },
-        "containerType": {
-            "type": "String",
-            "allowedValues": [
-                "publicImage-publicIP",
-                "publicImage-privateIP",
-                "privateImage-publicIP",
-                "privateImage-privateIP"
-            ],
-            "defaultValue": "privateImage-publicIP"
-        },
         "commands": {
             "defaultValue": "none",
             "type": "String"
@@ -92,10 +82,6 @@
         "APIversion": "2018-04-01",
         "containerName": "[parameters('containerName')]",
         "location": "[parameters('location')]",
-        "_bothPublic": "[equals(parameters('containerType'),'publicImage-publicIP')]",
-        "_publicImageOnly": "[equals(parameters('containerType'),'publicImage-privateIP')]",
-        "_publicIPOnly": "[equals(parameters('containerType'),'privateImage-publicIP')]",
-        "_bothPrivate": "[equals(parameters('containerType'),'privateImage-privateIP')]",
         "containerURI": "[parameters('containerURI')]",
         "imageRegistryLoginServer": "templafyshared.azurecr.io",
         "imageUsername": "templafyshared",
@@ -118,76 +104,11 @@
         "EV2": "[createArray(variables('environmentVariable2'))]",
         "EV3": "[createArray(variables('environmentVariable3'))]",
         "EV": "[if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable2'), parameters('hasEnvironmentVariable3')), variables('EVall'), if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable2')), variables('EV12'), if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable3')), variables('EV13'), if(and(parameters('hasEnvironmentVariable2'), parameters('hasEnvironmentVariable3')), variables('EV23'), if(parameters('hasEnvironmentVariable'), variables('EV1'), if(parameters('hasEnvironmentVariable2'), variables('EV2'), if(parameters('hasEnvironmentVariable3'), variables('EV3'), take(createArray(''), 0))))))))]",
-        "restartPolicy": "[parameters('restartPolicy')]",
-        "name1": "[if(variables('_bothPublic'), parameters('containerName'), 'container1')]",
-        "name2": "[if(variables('_publicImageOnly'), parameters('containerName'), 'container2')]",
-        "name3": "[if(variables('_publicIPOnly'), parameters('containerName'), 'container3')]",
-        "name4": "[if(variables('_bothPrivate'), parameters('containerName'), 'container4')]"
+        "restartPolicy": "[parameters('restartPolicy')]"
     },
     "resources": [
         {
-            "condition": "[variables('_bothPublic')]",
-            "name": "[variables('name1')]",
-            "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "[variables('APIversion')]",
-            "location": "[variables('location')]",
-            "properties": {
-                "containers": [
-                    {
-                        "name": "[variables('containerName')]",
-                        "properties": {
-                            "image": "[variables('containerURI')]",
-                            "command": "[variables('commands')]",
-                            "environmentVariables": "[variables('EV')]",
-                            "ports": "[variables('ports')]",
-                            "resources": {
-                                "requests": {
-                                    "cpu": "[variables('numberCores')]",
-                                    "memoryInGb": "[variables('memory')]"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "restartPolicy": "[variables('restartPolicy')]",
-                "osType": "[variables('osType')]",
-                "ipAddress": {
-                    "type": "Public",
-                    "dnsNameLabel": "[variables('dnsLabel')]",
-                    "ports": "[variables('ports')]"
-                }
-            }
-        },
-        {
-            "condition": "[variables('_publicImageOnly')]",
-            "name": "[variables('name2')]",
-            "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "[variables('APIversion')]",
-            "location": "[variables('location')]",
-            "properties": {
-                "containers": [
-                    {
-                        "name": "[variables('containerName')]",
-                        "properties": {
-                            "image": "[variables('containerURI')]",
-                            "command": "[variables('commands')]",
-                            "environmentVariables": "[variables('EV')]",
-                            "resources": {
-                                "requests": {
-                                    "cpu": "[variables('numberCores')]",
-                                    "memoryInGb": "[variables('memory')]"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "restartPolicy": "[variables('restartPolicy')]",
-                "osType": "[variables('osType')]"
-            }
-        },
-        {
-            "condition": "[variables('_publicIPOnly')]",
-            "name": "[variables('name3')]",
+            "name": "[variables('containerName')]",
             "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "[variables('APIversion')]",
             "location": "[variables('location')]",
@@ -216,40 +137,6 @@
                     "dnsNameLabel": "[variables('dnsLabel')]",
                     "ports": "[variables('ports')]"
                 },
-                "imageRegistryCredentials": [
-                    {
-                        "server": "[parameters('imageRegistryLoginServer')]",
-                        "username": "[parameters('imageUsername')]",
-                        "password": "[parameters('imagePassword')]"
-                    }
-                ]
-            }
-        },
-        {
-            "condition": "[variables('_bothPrivate')]",
-            "name": "[variables('name4')]",
-            "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "[variables('APIversion')]",
-            "location": "[variables('location')]",
-            "properties": {
-                "containers": [
-                    {
-                        "name": "[variables('containerName')]",
-                        "properties": {
-                            "image": "[variables('containerURI')]",
-                            "command": "[variables('commands')]",
-                            "environmentVariables": "[variables('EV')]",
-                            "resources": {
-                                "requests": {
-                                    "cpu": "[variables('numberCores')]",
-                                    "memoryInGb": "[variables('memory')]"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "restartPolicy": "[variables('restartPolicy')]",
-                "osType": "[variables('osType')]",
                 "imageRegistryCredentials": [
                     {
                         "server": "[parameters('imageRegistryLoginServer')]",
