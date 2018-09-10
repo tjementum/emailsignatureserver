@@ -5,9 +5,9 @@
         "containerName": {
             "type": "String"
         },
-        "containerURI": {
+        "containerVersion": {
             "type": "String",
-            "defaultValue": "templafyshared.azurecr.io/email-signature-server:latest",
+            "defaultValue": "latest",
             "metadata": {
                 "description": "The version of the Email Signature Server"
             }
@@ -24,41 +24,9 @@
             "defaultValue": "",
             "type": "String"
         },
-        "commands": {
-            "defaultValue": "none",
-            "type": "String"
-        },
         "office365ApplicationId": {
             "defaultValue":  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             "type": "String"
-        },
-        "environmentVariable": {
-            "defaultValue":  "\"office365ApplicationId\":\"[office365ApplicationId]\"",
-            "type": "String"
-        },
-        "environmentVariable2": {
-            "defaultValue": "\"office365DomainName\":\"[Office365DomainName].onmicrosoft.com\"",
-            "type": "String"
-        },
-        "environmentVariable3": {
-            "defaultValue": "\"azureStorageAccount\":\"DefaultEndpointsProtocol=https;AccountName=[AccountName];AccountKey=[AccountKey]\"",
-            "type": "String"
-        },
-        "hasEnvironmentVariable": {
-            "type": "bool",
-            "defaultValue": true
-        },
-        "hasEnvironmentVariable2": {
-            "type": "bool",
-            "defaultValue": true
-        },
-        "hasEnvironmentVariable3": {
-            "type": "bool",
-            "defaultValue": true
-        },
-        "restartPolicy": {
-            "type": "String",
-            "defaultValue": "always"
         }
     },
     "variables": {
@@ -66,7 +34,7 @@
         "doubleQuote": "\"",
         "containerName": "[parameters('containerName')]",
         "location": "[resourceGroup().location]",
-        "containerURI": "[parameters('containerURI')]",
+        "containerURI": "[concat('templafyshared.azurecr.io/email-signature-server:', parameters('containerVersion'))]",
         "imageRegistryLoginServer": "templafyshared.azurecr.io",
         "imageUsername": "templafyshared",
         "imagePassword": "xo7XHXMwjwcSb84CQX6lePKxCzkq10y+",
@@ -75,9 +43,8 @@
         "memory": "[float(parameters('memory'))]",
         "dnsLabel": "[parameters('dnsLabel')]",
         "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
-        "commands": "[if(equals(parameters('commands'), 'none'), take(createArray(''), 0), split(parameters('commands'), ', '))]",
-        "environmentVariables": "[createArray(json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"}')))]",
-        "restartPolicy": "[parameters('restartPolicy')]"
+        "environmentVariables": "[createArray(json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"', parameters('office365ApplicationId') ,'\"}')))]",
+        "restartPolicy": "always"
     },
     "resources": [
         {
@@ -91,7 +58,7 @@
                         "name": "[variables('containerName')]",
                         "properties": {
                             "image": "[variables('containerURI')]",
-                            "command": "[variables('commands')]",
+                            "command": "",
                             "environmentVariables": "[variables('environmentVariables')]",
                             "ports": "[variables('ports')]",
                             "resources": {
