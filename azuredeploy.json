@@ -6,7 +6,8 @@
             "type": "String"
         },
         "location": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "northeurope"
         },
         "containerURI": {
             "type": "String",
@@ -33,10 +34,12 @@
             "defaultValue":"Linux"
         },
         "numberCores": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "1"
         },
         "memory": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "1.5"
         },
         "dnsLabel": {
             "defaultValue": "",
@@ -55,10 +58,12 @@
             "type": "String"
         },
         "hasPort2": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": false
         },
         "hasPort3": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": false
         },
         "containerType": {
             "type": "String",
@@ -67,35 +72,40 @@
                 "publicImage-privateIP",
                 "privateImage-publicIP",
                 "privateImage-privateIP"
-            ]
+            ],
+            "defaultValue": "privateImage-publicIP"
         },
         "commands": {
             "defaultValue": "none",
             "type": "String"
         },
         "environmentVariable": {
-            "defaultValue": "\"null1\":0",
+            "defaultValue":  "\"office365ApplicationId\":\"7630257c8ca148cf8c44d42380fee3ad\"",
             "type": "String"
         },
         "environmentVariable2": {
-            "defaultValue": "\"null2\":0",
+            "defaultValue": "\"office365DomainName\":\"\"",
             "type": "String"
         },
         "environmentVariable3": {
-            "defaultValue": "\"null3\":0",
+            "defaultValue": "\"azureStorageAccount\":\"\"",
             "type": "String"
         },
         "hasEnvironmentVariable": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": "true"
         },
         "hasEnvironmentVariable2": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": "true"
         },
         "hasEnvironmentVariable3": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": "true"
         },
         "restartPolicy": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "always"
         }
     },
     "variables": {
