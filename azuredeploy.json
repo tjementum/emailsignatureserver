@@ -50,15 +50,15 @@
             "type": "String"
         },
         "environmentVariable": {
-            "defaultValue":  "\"office365ApplicationId\":\"7630257c8ca148cf8c44d42380fee3ad\"",
+            "defaultValue":  "\"office365ApplicationId\":\"[office365ApplicationId]\"",
             "type": "String"
         },
         "environmentVariable2": {
-            "defaultValue": "\"office365DomainName\":\"\"",
+            "defaultValue": "\"office365DomainName\":\"[Office365DomainName].onmicrosoft.com\"",
             "type": "String"
         },
         "environmentVariable3": {
-            "defaultValue": "\"azureStorageAccount\":\"\"",
+            "defaultValue": "\"azureStorageAccount\":\"DefaultEndpointsProtocol=https;AccountName=[AccountName];AccountKey=[AccountKey]\"",
             "type": "String"
         },
         "hasEnvironmentVariable": {
