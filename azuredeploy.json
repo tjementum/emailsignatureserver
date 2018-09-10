@@ -46,7 +46,7 @@
             "type": "String"
         },
         "ports": {
-            "defaultValue": "25",
+            "defaultValue": "{\"port\":  25, \"protocol\": \"TCP\"}",
             "type": "String"
         },
         "ports2": {
@@ -93,15 +93,15 @@
         },
         "hasEnvironmentVariable": {
             "type": "bool",
-            "defaultValue": "true"
+            "defaultValue": true
         },
         "hasEnvironmentVariable2": {
             "type": "bool",
-            "defaultValue": "true"
+            "defaultValue": true
         },
         "hasEnvironmentVariable3": {
             "type": "bool",
-            "defaultValue": "true"
+            "defaultValue": true
         },
         "restartPolicy": {
             "type": "String",
