@@ -53,24 +53,24 @@
     },
     "variables": {
         "APIversion": "2018-04-01",
-        "doubleQuote": "\"",
         "location": "[resourceGroup().location]",
-        "containerURI": "[concat('templafyshared.azurecr.io/email-signature-server:', parameters('containerVersion'))]",
+        "osType": "Linux",
+        "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
+        "restartPolicy": "always",
         "imageRegistryLoginServer": "templafyshared.azurecr.io",
         "imageUsername": "templafyshared",
         "imagePassword": "xo7XHXMwjwcSb84CQX6lePKxCzkq10y+",
-        "osType": "Linux",
+        "containerName": "[parameters('containerName')]",
+        "containerURI": "[concat('templafyshared.azurecr.io/email-signature-server:', parameters('containerVersion'))]",
         "numberCores": "[int(parameters('numberCores'))]",
         "memory": "[float(parameters('memory'))]",
         "dnsLabel": "[parameters('dnsLabel')]",
-        "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
         "office365ApplicationId": "[json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"', parameters('office365ApplicationId') ,'\"}'))]",
         "office365DomainName": "[json(concat('{\"name\": \"office365DomainName\", \"value\": \"', parameters('office365DomainName') ,'\"}'))]",
         "azureStorageAccount": "[json(concat('{\"name\": \"azureStorageAccount\", \"value\": \"', parameters('azureStorageAccount') ,'\"}'))]",
         "azureStorageEmailSignaturesContainerName": "[json(concat('{\"name\": \"azureStorageEmailSignaturesContainerName\", \"value\": \"', parameters('azureStorageEmailSignaturesContainerName') ,'\"}'))]",
         "secretsDirectory": "[json(concat('{\"name\": \"secretsDirectory\", \"value\": \"', parameters('secretsDirectory') ,'\"}'))]",
-        "environmentVariables": "[createArray(variables('office365ApplicationId'),variables('office365DomainName'),variables('azureStorageAccount'),variables('azureStorageEmailSignaturesContainerName'),variables('secretsDirectory'))]",
-        "restartPolicy": "always"
+        "environmentVariables": "[createArray(variables('office365ApplicationId'),variables('office365DomainName'),variables('azureStorageAccount'),variables('azureStorageEmailSignaturesContainerName'),variables('secretsDirectory'))]"
     },
     "resources": [
         {
