@@ -65,7 +65,12 @@
         "memory": "[float(parameters('memory'))]",
         "dnsLabel": "[parameters('dnsLabel')]",
         "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
-        "environmentVariables": "[createArray(json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"', parameters('office365ApplicationId') ,'\"}')))]",
+        "office365ApplicationId": "[json(concat('{\"name\": \"office365ApplicationId\", \"value\": \"', parameters('office365ApplicationId') ,'\"}'))]",
+        "office365DomainName": "[json(concat('{\"name\": \"office365DomainName\", \"value\": \"', parameters('office365DomainName') ,'\"}'))]",
+        "azureStorageAccountName": "[json(concat('{\"name\": \"azureStorageAccountName\", \"value\": \"', parameters('azureStorageAccountName') ,'\"}'))]",
+        "azureStorageEmailSignaturesContainerName": "[json(concat('{\"name\": \"azureStorageEmailSignaturesContainerName\", \"value\": \"', parameters('azureStorageEmailSignaturesContainerName') ,'\"}'))]",
+        "secretsDirectory": "[json(concat('{\"name\": \"secretsDirectory\", \"value\": \"', parameters('secretsDirectory') ,'\"}'))]",
+        "environmentVariables": "[createArray(variables('office365ApplicationId'),variables('office365DomainName'),variables('azureStorageAccountName'),variables('azureStorageEmailSignaturesContainerName'),variables('secretsDirectory'))]",
         "restartPolicy": "always"
     },
     "resources": [
