@@ -139,9 +139,9 @@
                 },
                 "imageRegistryCredentials": [
                     {
-                        "server": "[parameters('imageRegistryLoginServer')]",
-                        "username": "[parameters('imageUsername')]",
-                        "password": "[parameters('imagePassword')]"
+                        "server": "[variables('imageRegistryLoginServer')]",
+                        "username": "[variables('imageUsername')]",
+                        "password": "[variables('imagePassword')]"
                     }
                 ]
             }
