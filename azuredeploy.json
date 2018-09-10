@@ -2,139 +2,271 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "resourceName": {
-            "type": "string",
-            "defaultValue":"aks101cluster",
-            "metadata": {
-                "description": "The name of the Managed Cluster resource."
-            }
+        "containerName": {
+            "type": "String"
         },
         "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-                "description": "The location of the Managed Cluster resource."
-            }
+            "type": "String"
         },
-        "dnsPrefix": {
-            "type": "string",
-            "metadata": {
-                "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
-            }
+        "containerURI": {
+            "type": "String"
         },
-        "osDiskSizeGB": {
-            "type": "int",
-            "defaultValue": 0,
-            "metadata": {
-                "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
-            },
-            "minValue": 0,
-            "maxValue": 1023
+        "imageRegistryLoginServer": {
+            "type": "String",
+            "defaultValue": ""
         },
-        "agentCount": {
-            "type": "int",
-            "defaultValue": 3,
-            "metadata": {
-                "description": "The number of nodes for the cluster."
-            },
-            "minValue": 1,
-            "maxValue": 50
+        "imageUsername": {
+            "type": "String",
+            "defaultValue": ""
         },
-        "agentVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2_v2",
-            "metadata": {
-                "description": "The size of the Virtual Machine."
-            }
-        },
-        "linuxAdminUsername": {
-            "type": "string",
-            "metadata": {
-                "description": "User name for the Linux Virtual Machines."
-            }
-        },
-        "sshRSAPublicKey": {
-            "type": "string",
-            "metadata": {
-                "description": "Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example 'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm'"
-            }
-        },
-        "servicePrincipalClientId": {
-            "metadata": {
-                "description": "Client ID (used by cloudprovider)"
-            },
-            "type": "securestring"
-        },
-        "servicePrincipalClientSecret": {
-            "metadata": {
-                "description": "The Service Principal Client Secret."
-            },
-            "type": "securestring"
+        "imagePassword": {
+            "type": "secureString",
+            "defaultValue": ""
         },
         "osType": {
-            "type": "string",
-            "defaultValue": "Linux",
             "allowedValues": [
-                "Linux"
+                "Linux",
+                "Windows"
             ],
-            "metadata": {
-                "description": "The type of operating system."
-            }
+            "type": "String"
         },
-        "kubernetesVersion": {
-            "type": "string",
-            "defaultValue": "1.9.6",
+        "numberCores": {
+            "type": "String"
+        },
+        "memory": {
+            "type": "String"
+        },
+        "dnsLabel": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "ports": {
+            "defaultValue": "80",
+            "type": "String"
+        },
+        "ports2": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "ports3": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "hasPort2": {
+            "type": "bool"
+        },
+        "hasPort3": {
+            "type": "bool"
+        },
+        "containerType": {
+            "type": "String",
             "allowedValues": [
-                "1.7.7",
-                "1.8.1",
-                "1.9.1",
-                "1.9.6"
-            ],
-            "metadata": {
-                "description": "The version of Kubernetes."
-            }
+                "publicImage-publicIP",
+                "publicImage-privateIP",
+                "privateImage-publicIP",
+                "privateImage-privateIP"
+            ]
+        },
+        "commands": {
+            "defaultValue": "none",
+            "type": "String"
+        },
+        "environmentVariable": {
+            "defaultValue": "\"null1\":0",
+            "type": "String"
+        },
+        "environmentVariable2": {
+            "defaultValue": "\"null2\":0",
+            "type": "String"
+        },
+        "environmentVariable3": {
+            "defaultValue": "\"null3\":0",
+            "type": "String"
+        },
+        "hasEnvironmentVariable": {
+            "type": "bool"
+        },
+        "hasEnvironmentVariable2": {
+            "type": "bool"
+        },
+        "hasEnvironmentVariable3": {
+            "type": "bool"
+        },
+        "restartPolicy": {
+            "type": "String"
         }
+    },
+    "variables": {
+        "APIversion": "2018-04-01",
+        "containerName": "[parameters('containerName')]",
+        "location": "[parameters('location')]",
+        "_bothPublic": "[equals(parameters('containerType'),'publicImage-publicIP')]",
+        "_publicImageOnly": "[equals(parameters('containerType'),'publicImage-privateIP')]",
+        "_publicIPOnly": "[equals(parameters('containerType'),'privateImage-publicIP')]",
+        "_bothPrivate": "[equals(parameters('containerType'),'privateImage-privateIP')]",
+        "containerURI": "[parameters('containerURI')]",
+        "imageRegistryLoginServer": "[parameters('imageRegistryLoginServer')]",
+        "imageUsername": "[parameters('imageUsername')]",
+        "imagePassword": "[parameters('imagePassword')]",
+        "osType": "[parameters('osType')]",
+        "numberCores": "[int(parameters('numberCores'))]",
+        "memory": "[float(parameters('memory'))]",
+        "dnsLabel": "[parameters('dnsLabel')]",
+        "port": "[parameters('ports')]",
+        "ports": "[if(and(parameters('hasPort2'), parameters('hasPort3')), createArray(json(parameters('ports')), json(parameters('ports2')), json(parameters('ports3'))), if(parameters('hasPort2'), createArray(json(parameters('ports')), json(parameters('ports2'))), if(parameters('hasPort3'), createArray(json(parameters('ports')), json(parameters('ports3'))), createArray(json(parameters('ports'))))))]",
+        "commands": "[if(equals(parameters('commands'), 'none'), take(createArray(''), 0), split(parameters('commands'), ', '))]",
+        "environmentVariable": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable'), ':'), 2)), '}'))]",
+        "environmentVariable2": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable2'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable2'), ':'), 2)), '}'))]",
+        "environmentVariable3": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable3'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable3'), ':'), 2)), '}'))]",
+        "EVall": "[createArray(variables('environmentVariable'), variables('environmentVariable2'), variables('environmentVariable3'))]",
+        "EV12": "[createArray(variables('environmentVariable'), variables('environmentVariable2'))]",
+        "EV13": "[createArray(variables('environmentVariable'), variables('environmentVariable3'))]",
+        "EV23": "[createArray(variables('environmentVariable2'), variables('environmentVariable3'))]",
+        "EV1": "[createArray(variables('environmentVariable'))]",
+        "EV2": "[createArray(variables('environmentVariable2'))]",
+        "EV3": "[createArray(variables('environmentVariable3'))]",
+        "EV": "[if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable2'), parameters('hasEnvironmentVariable3')), variables('EVall'), if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable2')), variables('EV12'), if(and(parameters('hasEnvironmentVariable'), parameters('hasEnvironmentVariable3')), variables('EV13'), if(and(parameters('hasEnvironmentVariable2'), parameters('hasEnvironmentVariable3')), variables('EV23'), if(parameters('hasEnvironmentVariable'), variables('EV1'), if(parameters('hasEnvironmentVariable2'), variables('EV2'), if(parameters('hasEnvironmentVariable3'), variables('EV3'), take(createArray(''), 0))))))))]",
+        "restartPolicy": "[parameters('restartPolicy')]",
+        "name1": "[if(variables('_bothPublic'), parameters('containerName'), 'container1')]",
+        "name2": "[if(variables('_publicImageOnly'), parameters('containerName'), 'container2')]",
+        "name3": "[if(variables('_publicIPOnly'), parameters('containerName'), 'container3')]",
+        "name4": "[if(variables('_bothPrivate'), parameters('containerName'), 'container4')]"
     },
     "resources": [
         {
-            "apiVersion": "2017-08-31",
-            "type": "Microsoft.ContainerService/managedClusters",
-            "location": "[parameters('location')]",
-            "name": "[parameters('resourceName')]",
+            "condition": "[variables('_bothPublic')]",
+            "name": "[variables('name1')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "[variables('APIversion')]",
+            "location": "[variables('location')]",
             "properties": {
-                "kubernetesVersion": "[parameters('kubernetesVersion')]",
-                "dnsPrefix": "[parameters('dnsPrefix')]",
-                "agentPoolProfiles": [
+                "containers": [
                     {
-                        "name": "agentpool",
-                        "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
-                        "count": "[parameters('agentCount')]",
-                        "vmSize": "[parameters('agentVMSize')]",
-                        "osType": "[parameters('osType')]",
-                        "storageProfile": "ManagedDisks"
+                        "name": "[variables('containerName')]",
+                        "properties": {
+                            "image": "[variables('containerURI')]",
+                            "command": "[variables('commands')]",
+                            "environmentVariables": "[variables('EV')]",
+                            "ports": "[variables('ports')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": "[variables('numberCores')]",
+                                    "memoryInGb": "[variables('memory')]"
+                                }
+                            }
+                        }
                     }
                 ],
-                "linuxProfile": {
-                    "adminUsername": "[parameters('linuxAdminUsername')]",
-                    "ssh": {
-                        "publicKeys": [
-                            {
-                                "keyData": "[parameters('sshRSAPublicKey')]"
-                            }
-                        ]
-                    }
-                },
-                "servicePrincipalProfile": {
-                    "ClientId": "[parameters('servicePrincipalClientId')]",
-                    "Secret": "[parameters('servicePrincipalClientSecret')]"
+                "restartPolicy": "[variables('restartPolicy')]",
+                "osType": "[variables('osType')]",
+                "ipAddress": {
+                    "type": "Public",
+                    "dnsNameLabel": "[variables('dnsLabel')]",
+                    "ports": "[variables('ports')]"
                 }
+            }
+        },
+        {
+            "condition": "[variables('_publicImageOnly')]",
+            "name": "[variables('name2')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "[variables('APIversion')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('containerName')]",
+                        "properties": {
+                            "image": "[variables('containerURI')]",
+                            "command": "[variables('commands')]",
+                            "environmentVariables": "[variables('EV')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": "[variables('numberCores')]",
+                                    "memoryInGb": "[variables('memory')]"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "restartPolicy": "[variables('restartPolicy')]",
+                "osType": "[variables('osType')]"
+            }
+        },
+        {
+            "condition": "[variables('_publicIPOnly')]",
+            "name": "[variables('name3')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "[variables('APIversion')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('containerName')]",
+                        "properties": {
+                            "image": "[variables('containerURI')]",
+                            "command": "[variables('commands')]",
+                            "environmentVariables": "[variables('EV')]",
+                            "ports": "[variables('ports')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": "[variables('numberCores')]",
+                                    "memoryInGb": "[variables('memory')]"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "restartPolicy": "[variables('restartPolicy')]",
+                "osType": "[variables('osType')]",
+                "ipAddress": {
+                    "type": "Public",
+                    "dnsNameLabel": "[variables('dnsLabel')]",
+                    "ports": "[variables('ports')]"
+                },
+                "imageRegistryCredentials": [
+                    {
+                        "server": "[parameters('imageRegistryLoginServer')]",
+                        "username": "[parameters('imageUsername')]",
+                        "password": "[parameters('imagePassword')]"
+                    }
+                ]
+            }
+        },
+        {
+            "condition": "[variables('_bothPrivate')]",
+            "name": "[variables('name4')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "[variables('APIversion')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('containerName')]",
+                        "properties": {
+                            "image": "[variables('containerURI')]",
+                            "command": "[variables('commands')]",
+                            "environmentVariables": "[variables('EV')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": "[variables('numberCores')]",
+                                    "memoryInGb": "[variables('memory')]"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "restartPolicy": "[variables('restartPolicy')]",
+                "osType": "[variables('osType')]",
+                "imageRegistryCredentials": [
+                    {
+                        "server": "[parameters('imageRegistryLoginServer')]",
+                        "username": "[parameters('imageUsername')]",
+                        "password": "[parameters('imagePassword')]"
+                    }
+                ]
             }
         }
     ],
-    "outputs": {
-        "controlPlaneFQDN": {
-            "type": "string",
-            "value": "[reference(parameters('resourceName')).fqdn]"
-        }
-    }
+    "outputs": {}
 }
