@@ -5,13 +5,12 @@
         "containerName": {
             "type": "String"
         },
-        "location": {
-            "type": "String",
-            "defaultValue": "northeurope"
-        },
         "containerURI": {
             "type": "String",
-            "defaultValue": "templafyshared.azurecr.io/email-signature-server:latest"
+            "defaultValue": "templafyshared.azurecr.io/email-signature-server:latest",
+            "metadata": {
+                "description": "The version of the Email Signature Server"
+            }
         },
         "numberCores": {
             "type": "String",
@@ -27,6 +26,10 @@
         },
         "commands": {
             "defaultValue": "none",
+            "type": "String"
+        },
+        "office365ApplicationId": {
+            "defaultValue":  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             "type": "String"
         },
         "environmentVariable": {
@@ -61,7 +64,7 @@
     "variables": {
         "APIversion": "2018-04-01",
         "containerName": "[parameters('containerName')]",
-        "location": "[parameters('location')]",
+        "location": "[resourceGroup().location]",
         "containerURI": "[parameters('containerURI')]",
         "imageRegistryLoginServer": "templafyshared.azurecr.io",
         "imageUsername": "templafyshared",
@@ -72,6 +75,9 @@
         "dnsLabel": "[parameters('dnsLabel')]",
         "ports": "[createArray(json('{\"port\":  25, \"protocol\": \"TCP\"}'))]",
         "commands": "[if(equals(parameters('commands'), 'none'), take(createArray(''), 0), split(parameters('commands'), ', '))]",
+        
+        "environmentVariables": "[json(concat('{\"name\": ', \"office365ApplicationId\", ', \"value\": ', '\"', parameters('office365ApplicationId'), '\"', '}'))]",
+        
         "environmentVariable": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable'), ':'), 2)), '}'))]",
         "environmentVariable2": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable2'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable2'), ':'), 2)), '}'))]",
         "environmentVariable3": "[json(concat('{\"name\":  ', first(split(parameters('environmentVariable3'), ':')), ', \"value\": ', last(take(split(parameters('environmentVariable3'), ':'), 2)), '}'))]",
@@ -98,7 +104,7 @@
                         "properties": {
                             "image": "[variables('containerURI')]",
                             "command": "[variables('commands')]",
-                            "environmentVariables": "[variables('EV')]",
+                            "environmentVariables": "[variables('environmentVariables')]",
                             "ports": "[variables('ports')]",
                             "resources": {
                                 "requests": {
